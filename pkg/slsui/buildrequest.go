@@ -4,7 +4,7 @@ type RequestBuild struct {
 	Provider Provider      `json:"provider"`
 	Lambda   []Lambda      `json:"lambda"`
 	Dynamodb []Dynamodb    `json:"dynamodb"`
-	Sqs      []interface{} `json:"sqs"`
+	Sqs      []SqsResource `json:"sqs"`
 }
 
 type Dynamodb struct {
@@ -67,4 +67,9 @@ type Provider struct {
 	Runtime    string `json:"runtime"`
 	MemorySize int64  `json:"memorySize"`
 	Timeout    int64  `json:"timeout"`
+}
+
+type SqsResource struct {
+	Name      string `json:"name"`
+	QueueName string `json:"queueName"`
 }

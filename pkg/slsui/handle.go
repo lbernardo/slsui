@@ -19,7 +19,7 @@ func NewSLSUI() *SLSUI {
 	return &SLSUI{}
 }
 
-func (s *SLSUI) Build(r RequestBuild) {
+func (s *SLSUI) Build(r RequestBuild) []byte {
 	var sls ServerlessFramework
 	sls.Service.Name = r.Provider.Name
 	sls.Provider.Name = "aws"
@@ -81,6 +81,15 @@ func (s *SLSUI) Build(r RequestBuild) {
 		}
 	}
 
+	for _, n := range r.Sqs {
+		sls.Resources[n.Name] = SLSSQSResource{
+			Type: "AWS::SQS::Queue",
+			Properties: SLSSQSProperties{
+				QueueName: n.QueueName,
+			},
+		}
+	}
+
 	o, _ := yaml.Marshal(&sls)
-	fmt.Println(string(o))
+	return o
 }

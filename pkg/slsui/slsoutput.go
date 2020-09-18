@@ -52,3 +52,11 @@ type SLSProvisionedThroughput struct {
 	ReadCapacityUnits  int64 `yaml:"ReadCapacityUnits"`
 	WriteCapacityUnits int64 `yaml:"WriteCapacityUnits"`
 }
+
+type SLSSQSResource struct {
+	Type       string           `yaml:"Type"`
+	Properties SLSSQSProperties `yaml:"Properties"`
+}
+type SLSSQSProperties struct {
+	QueueName string `yaml:"QueueName"`
+}
