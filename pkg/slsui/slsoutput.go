@@ -4,6 +4,7 @@ type ServerlessFramework struct {
 	Service   SLSService              `yaml:"service"`
 	Provider  SLSProvider             `yaml:"provider"`
 	Functions map[string]SLSFunctions `yaml:"functions"`
+	Resources map[string]interface{}  `yaml:"resources,omitempty"`
 }
 
 type SLSService struct {
@@ -30,4 +31,24 @@ type SLSHttpEvent struct {
 type SLSS3Event struct {
 	Bucket string `yaml:"bucket"`
 	Event  string `yaml:"event"`
+}
+
+type SLSDynamodbResource struct {
+	Type       string                 `yaml:"Type"`
+	Properties map[string]interface{} `yaml:"Properties"`
+}
+
+type SLSAttributeDefinitions struct {
+	AttributeName string `yaml:"AttributeName"`
+	AttributeType string `yaml:"AttributeType"`
+}
+
+type SLSKeySchema struct {
+	AttributeName string `yaml:"AttributeName"`
+	KeyType       string `yaml:"KeyType"`
+}
+
+type SLSProvisionedThroughput struct {
+	ReadCapacityUnits  int64 `yaml:"ReadCapacityUnits"`
+	WriteCapacityUnits int64 `yaml:"WriteCapacityUnits"`
 }

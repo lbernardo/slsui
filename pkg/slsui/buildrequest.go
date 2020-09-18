@@ -3,8 +3,31 @@ package slsui
 type RequestBuild struct {
 	Provider Provider      `json:"provider"`
 	Lambda   []Lambda      `json:"lambda"`
-	Dynamodb []interface{} `json:"dynamodb"`
+	Dynamodb []Dynamodb    `json:"dynamodb"`
 	Sqs      []interface{} `json:"sqs"`
+}
+
+type Dynamodb struct {
+	Name                string              `json:"name"`
+	TableName           string              `json:"tableName"`
+	AttributeDefinition AttributeDefinition `json:"attributeDefinition"`
+	KeySchema           KeySchema           `json:"keySchema"`
+	Throughput          Throughput          `json:"throughput"`
+}
+
+type AttributeDefinition struct {
+	AttributeName string `json:"attributeName"`
+	AttributeType string `json:"attributeType"`
+}
+
+type KeySchema struct {
+	AttributeName string `json:"attributeName"`
+	KeyType       string `json:"keyType"`
+}
+
+type Throughput struct {
+	ReadCapacityUnits  int64 `json:"readCapacityUnits"`
+	WriteCapacityUnits int64 `json:"writeCapacityUnits"`
 }
 
 type Lambda struct {

@@ -27,6 +27,7 @@ func (s *SLSUI) Build(r RequestBuild) {
 	sls.Provider.Timeout = r.Provider.Timeout
 	sls.Provider.MemorySize = r.Provider.MemorySize
 	sls.Functions = map[string]SLSFunctions{}
+	sls.Resources = map[string]interface{}{}
 
 	for _, n := range r.Lambda {
 
@@ -42,11 +43,41 @@ func (s *SLSUI) Build(r RequestBuild) {
 				Bucket: n.S3.Bucket,
 				Event:  n.S3.Permission,
 			}
+		case schedule:
+			if n.Schedule.Type == "rate" {
+				event["schedule"] = fmt.Sprintf("rate(%v %v)", n.Schedule.RateNum, n.Schedule.RatePeriod)
+			} else {
+				event["schedule"] = fmt.Sprintf("cron(%v)", n.Schedule.CronPeriod)
+			}
+		case sqs:
+			event["sqs"] = n.Sqs.Value
 		}
 
 		sls.Functions[n.Name] = SLSFunctions{
 			Handler: n.Handler,
 			Events:  event,
+		}
+	}
+
+	for _, n := range r.Dynamodb {
+
+		sls.Resources[n.Name] = SLSDynamodbResource{
+			Type: "AWS::DynamoDB::Table",
+			Properties: map[string]interface{}{
+				"TableName": n.TableName,
+				"AttributeDefinitions": SLSAttributeDefinitions{
+					AttributeName: n.AttributeDefinition.AttributeName,
+					AttributeType: n.AttributeDefinition.AttributeType,
+				},
+				"KeySchema": SLSKeySchema{
+					AttributeName: n.KeySchema.AttributeName,
+					KeyType:       n.KeySchema.KeyType,
+				},
+				"ProvisionedThroughput": SLSProvisionedThroughput{
+					ReadCapacityUnits:  n.Throughput.ReadCapacityUnits,
+					WriteCapacityUnits: n.Throughput.WriteCapacityUnits,
+				},
+			},
 		}
 	}
 
