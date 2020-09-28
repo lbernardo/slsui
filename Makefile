@@ -1,5 +1,5 @@
 build:
-	go build -o bin/slsui cmd/slsui/*
-	go build -o bin/downloadui cmd/downloadui/*
+	env GOOS=darwin go build -o bin/darwin/slsui cmd/slsui/*
+	env GOOS=linux go build -o bin/linux/slsui cmd/slsui/*
 downloadui:
 	go run ./cmd/downloadui
